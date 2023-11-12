@@ -4,6 +4,12 @@ This project was our introduction to workflow from year 2 in frontend-developmen
 
 we were tasked to fork one of Noroff's repo's and implement what we learned to their project.
 
+## Badges
+
+[![Automated E2E Testing](https://github.com/JeanettKM/WorkflowY2/actions/workflows/e2eTesting.yml/badge.svg)](https://github.com/JeanettKM/WorkflowY2/actions/workflows/e2eTesting.yml)
+
+[![Automated Unit Testing](https://github.com/JeanettKM/WorkflowY2/actions/workflows/unitTesting.yml/badge.svg)](https://github.com/JeanettKM/WorkflowY2/actions/workflows/unitTesting.yml)
+
 ## NPM tools
 
 - Babel,
@@ -24,11 +30,6 @@ In your choice of code editor:
 3. To run only unit-tests enter: npm run test-unit
 4. to run only e2e-tests enter: npm run test-e2e-cli
 
-## Badges
-
-[![Automated E2E Testing](https://github.com/JeanettKM/WorkflowY2/actions/workflows/e2eTesting.yml/badge.svg)](https://github.com/JeanettKM/WorkflowY2/actions/workflows/e2eTesting.yml)
-
-[![Automated Unit Testing](https://github.com/JeanettKM/WorkflowY2/actions/workflows/unitTesting.yml/badge.svg)](https://github.com/JeanettKM/WorkflowY2/actions/workflows/unitTesting.yml)
 
 # Unit tests:
 
