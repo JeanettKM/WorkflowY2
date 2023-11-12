@@ -1,56 +1,55 @@
-import { logout } from "../js/api/auth/logout.js";
+import { login } from "../js/api/auth/login.js";
 
-/**
- * Mock localStorage for testing
- */
-const mockCheckLocalStorage = {
-  getItem: jest.fn((key) => localStorage[key] || null),
-  removeItem: jest.fn((key, value) => (localStorage[key] = value)),
+const userEmail = "jeanett.kestner@stud.noroff.no";
+const userPassword = "Kestner12";
+const mockAccessToken = "localTokenMock";
+
+const mockSuccessfulFetch = jest.fn().mockResolvedValue({
+  ok: true,
+  json: jest.fn().mockResolvedValue({
+    name: "test",
+    email: userEmail,
+    accessToken: mockAccessToken,
+  }),
+});
+
+const mockLocalStorage = {
+  getItem: jest.fn(),
+  setItem: jest.fn(),
+  removeItem: jest.fn(),
+  clear: jest.fn(),
 };
 
-/**
- * Define the mockCheckLocalStorage
- */
-global.localStorage = mockCheckLocalStorage;
+global.localStorage = mockLocalStorage;
 
-/**
- * Testing the Logout function
- */
-describe("Logout Function Tests", () => {
-  /**
-   * Test to Remove token from the local storage
-   */
-  it("Removes token from the local storage", () => {
-    /**
-     * Call the logout function
-     */
-    logout();
+const mockFailedFetch = jest.fn().mockResolvedValue({
+  ok: false,
+  statusText: "Unauthorized",
+  statusCode: 401,
+});
 
-    /**
-     * Expect that removeItem has been called twice
-     */
-    expect(mockCheckLocalStorage.removeItem).toHaveBeenCalledWith("token");
-    expect(mockCheckLocalStorage.removeItem).toHaveBeenCalledWith("profile");
-
-    /**
-     * Expect that removeItem has been called 2 times
-     */
-    expect(mockCheckLocalStorage.removeItem).toHaveBeenCalledTimes(2);
+describe("login function", () => {
+  beforeEach(() => {
+    mockLocalStorage.clear();
   });
 
-  /**
-   * Test: Is local storage cleared?
-   */
-  it("Checks that the local storage is cleared", () => {
-    /**
-     * Expect that getItem has been called twice
-     */
-    expect(mockCheckLocalStorage.getItem("token")).toBeNull();
-    expect(mockCheckLocalStorage.getItem("profile")).toBeNull();
+  it("calls API and stores values in local storage", async () => {
+    global.fetch = mockSuccessfulFetch;
+    await login(userEmail, userPassword);
+    expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
+      "token",
+      '"localTokenMock"'
+    );
+    expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
+      "profile",
+      '{"name":"test","email":"jeanett.kestner@stud.noroff.no"}'
+    );
+  });
 
-    /**
-     * Expect that getItem has been called 2 times
-     */
-    expect(mockCheckLocalStorage.getItem).toHaveBeenCalledTimes(2);
+  it("API call fails and does not store values in local storage", async () => {
+    global.fetch = mockFailedFetch;
+    await expect(login(userEmail, userPassword)).rejects.toThrow(
+      "Unauthorized"
+    );
   });
 });

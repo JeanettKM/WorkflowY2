@@ -2,35 +2,22 @@ describe("Test for the Logout function", () => {
   const userEmail = "jeanett.kestner@stud.noroff.no";
   const userPassword = "Kestner12";
 
-  it("User can log out", () => {
-    cy.visit("/index.html");
-    showLoginModal();
-    login(userEmail, userPassword);
-    sendLoginForm();
-    logout();
-    checkIfLoggedOut();
+  it("Test for the log-out function using the logout button", () => {
+    cy.visit("/");
+    cy.wait(1000);
+
+    cy.get("#registerForm button[type=button]").contains("Login").click();
+    cy.wait(1000);
+
+    cy.get("#loginEmail").type(userEmail).type("{enter}");
+    cy.get("#loginPassword").type(userPassword);
+    cy.get("#loginForm button[type=submit]").contains("Login").click();
+    cy.wait(1000);
+
+    cy.get("header button[type=button]")
+      .contains("Logout")
+      .click({ force: true });
+
+    cy.url().should("not.include", "profile");
   });
-
-  function showLoginModal() {
-    cy.get("#registerModal").contains("Login").click();
-    cy.get("#loginForm").should("be.visible");
-  }
-
-  function login(email, password) {
-    cy.get("#loginEmail").type(email);
-    cy.get("#loginPassword").type(password);
-  }
-
-  function sendLoginForm() {
-    cy.get("button[type=submit]").contains("Login").click();
-  }
-
-  function logout() {
-    cy.get("header button[type=button]").contains("Logout").click();
-  }
-
-  function checkIfLoggedOut() {
-    cy.clearLocalStorage();
-    cy.window().its("localStorage").should("be.empty");
-  }
 });

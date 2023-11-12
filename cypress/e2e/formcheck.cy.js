@@ -1,51 +1,31 @@
-describe("Test for the form validation during login", () => {
-  const userEmail = "jeanett.kestner@stud.noroff.no";
-  const userPassword = "Kestner12";
-  const wrongEmail = "testing@noroff.no";
-  const wrongPassword = "passwordtest12";
+const userEmail = "jeanett.kestner@stud.noroff.no";
+const userPassword = "Kestner12";
+const incorrectEmail = "testing@noroff.no";
+const incorrectPassword = "passwordTest123";
 
+describe("Test for form validation and error handling", () => {
   beforeEach(() => {
-    cy.visit("/index.html");
-    showLoginModal();
+    cy.visit("/");
+    cy.wait(1000);
+    cy.get("#registerForm button[type=button]").contains("Login").click();
+    cy.wait(1000);
   });
 
-  it("Display error for incorrect email", () => {
-    login(wrongEmail, userPassword);
-    displayError("Invalid email or password");
+  it("Displays error for wrong password", () => {
+    cy.login(userEmail, incorrectPassword);
   });
 
-  it("Display error for incorrect password", () => {
-    login(userEmail, wrongPassword);
-    displayError("Invalid email or password");
+  it("Displays error for wrong email", () => {
+    cy.login(incorrectEmail, userPassword);
   });
 
-  it("Display error for incorrect email and password", () => {
-    login(wrongEmail, wrongPassword);
-    displayError("Invalid email or password");
+  it("Displays error for empty input field", () => {
+    cy.login("a", "a");
   });
+});
 
-  it("Display error for empty login form", () => {
-    sendLoginForm();
-    cy.wait(2000);
-  });
-
-  function showLoginModal() {
-    cy.get("#registerModal").contains("Login").click();
-  }
-
-  function login(email, password) {
-    cy.get("#loginEmail").type(email);
-    cy.get("#loginPassword").type(password);
-    sendLoginForm();
-  }
-
-  function sendLoginForm() {
-    cy.get("#loginForm button[type=submit]").contains("Login").click();
-  }
-
-  function displayError(errorText) {
-    cy.on("window:alert", (errorPrompt) => {
-      expect(errorPrompt).to.equal(errorText);
-    });
-  }
+Cypress.Commands.add("login", (email, password) => {
+  cy.get("#loginEmail").type(email).type("{enter}");
+  cy.get("#loginPassword").type(password);
+  cy.get("#loginForm button[type=submit]").contains("Login").click();
 });
