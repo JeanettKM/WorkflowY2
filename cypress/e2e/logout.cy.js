@@ -1,4 +1,4 @@
-describe("User Logout Test", () => {
+describe("Test for the Logout function", () => {
   const userEmail = "jeanett.kestner@stud.noroff.no";
   const userPassword = "Kestner12";
 

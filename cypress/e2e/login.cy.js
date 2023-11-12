@@ -1,4 +1,4 @@
-describe("User Login Test", () => {
+describe("Test for the login function", () => {
   const userEmail = "jeanett.kestner@stud.noroff.no";
   const userPassword = "Kestner12";
 
@@ -7,7 +7,6 @@ describe("User Login Test", () => {
     showLoginModal();
     loginInput(userEmail, userPassword);
     sendLoginForm();
-    cy.wait(2000);
     verifyProfile();
   });
 
